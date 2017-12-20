@@ -59,13 +59,13 @@ This route allows for creation of new users or listing of all users, depending o
 In the case of either HTTP method listed above, each will return a formatted JSON (a JSON array for GET, and a single JSON object for POST) response if it was a good request. Each individual user object will look like the following:
 
   {  
-    "id": 1, **_(any integer corresponding to primary key)_**  
-    "email": "example@scrumscrum.com",  
-    "username": "scrummy",  
-    "first_name": "Scrum",  
-    "last_name": "Scrummy",  
-    "date_joined": "2017-12-20T06:59:24.528864Z",  
-    "is_active": true **_(could also be false)_**  
+  &nbsp;&nbsp;"id": 1, **_(any integer corresponding to primary key)_**  
+  &nbsp;&nbsp;"email": "example@scrumscrum.com",  
+  &nbsp;&nbsp;"username": "scrummy",  
+  &nbsp;&nbsp;"first_name": "Scrum",  
+  &nbsp;&nbsp;"last_name": "Scrummy",  
+  &nbsp;&nbsp;"date_joined": "2017-12-20T06:59:24.528864Z",  
+  &nbsp;&nbsp;"is_active": true **_(could also be false)_**  
   }  
 
 ### specific user *<domain>/api/user/<user_id>*
