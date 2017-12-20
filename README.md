@@ -42,4 +42,36 @@ To test the API, you will need to tell Django to start listening for network req
 2. You can now use the API.
 
 ## API Routes
-Not complete yet.
+The following API routes are currently implemented, and you can access them on the development server by replacing *<domain>* with *127.0.0.1:8080* or *localhost:8080* in a web browser.
+### login *<domain>/api/login/*
+This route returns an auth token via JSON if the supplied credentials are legitimate, or a 400 BAD REQUEST HTTP error if the credentials are invalid. You will need to include an Authorization header in every following HTTP request that requires a user to be "logged in".
+- JSON: `{ "token" : "<the auth token>" }`
+- Acceptable HTTP request methods:
+  - POST
+- Authorization header: `Authorization: Token <the auth token>`
+  - *The format of the authorization header must match the above exactly*
+### user *<domain>/api/user/*
+This route allows for creation of new users or listing of all users, depending on the HTTP request method used.
+- Acceptable HTTP request methods:
+  - POST: create new user
+  - GET: list all users
+
+In the case of either HTTP method listed above, each will return a formatted JSON (a JSON array for GET, and a single JSON object for POST) response if it was a good request. Each individual user object will look like the following:
+
+  {
+    "id": 1, **_(any integer corresponding to primary key)_**
+    "email": "example@scrumscrum.com",
+    "username": "scrummy",
+    "first_name": "Scrum",
+    "last_name": "Scrummy",
+    "date_joined": "2017-12-20T06:59:24.528864Z",
+    "is_active": true **_(could also be false)_**
+  }
+
+### specific user *<domain>/api/user/<user_id>*
+This route is essentially a detail view for a specific user corresponding to their *<user_id>* in the database.
+- Acceptable HTTP request methods:
+  - GET: Just list the user's information
+  - PUT: Update the user's information (must be authenticated as specified user)
+  - PATCH: Update the user's information (must be authenticated as specified user)
+  - DELETE: Delete the user's account (must be authenticated as specified user)
