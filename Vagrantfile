@@ -51,5 +51,11 @@ Vagrant.configure("2") do |config|
       mysql -uroot -e "GRANT ALL ON *.* TO ''@'localhost'"
       mysql -e "CREATE DATABASE IF NOT EXISTS scrum_scrum"
     fi
+    # Configure the virtual machine's firewall to allow networking requests
+    if ! grep -q FIREWALL_CONFIGURED /home/vagrant/.bashrc; then
+      echo "# FIREWALL_CONFIGURED" >> /home/vagrant/.bashrc
+      sudo firewall-cmd --zone=public --add-port=8080/tcp --permanent
+      sudo firewall-cmd --reload
+    fi
   SHELL
 end
