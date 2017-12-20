@@ -157,4 +157,4 @@ LOGGING = {
 }
 
 # Lifespan of authentication token
-TOKEN_EXPIRATION_HRS = 24
+TOKEN_EXPIRATION_DAYS = 14

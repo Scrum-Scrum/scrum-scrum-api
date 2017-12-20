@@ -87,7 +87,7 @@ class ScrumScrumUser(AbstractBaseUser, PermissionsMixin):
         """Generate a JSON Web Token."""
 
         expiration = datetime.datetime.now() + datetime.timedelta(
-                        hours=settings.TOKEN_EXPIRATION_HRS)
+                        days=settings.TOKEN_EXPIRATION_DAYS)
 
         token = jwt.encode({
             'id': self.pk,
