@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
+import jwt
+
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
@@ -73,3 +77,21 @@ class ScrumScrumUser(AbstractBaseUser, PermissionsMixin):
 
     def __str___(self):
         return self.username
+
+    @property
+    def token(self):
+        """Return the user's token."""
+        return self._generate_jwt_token()
+
+    def _generate_jwt_token(self):
+        """Generate a JSON Web Token."""
+
+        expiration = datetime.datetime.now() + datetime.timedelta(
+                        hours=settings.TOKEN_EXPIRATION_HRS)
+
+        token = jwt.encode({
+            'id': self.pk,
+            'exp': int(expiration.strftime('%s'))
+        }, settings.SECRET_KEY, algorithm='HS256')
+
+        return token.decode('utf-8')
