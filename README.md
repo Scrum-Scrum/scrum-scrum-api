@@ -33,7 +33,7 @@ In order to use this API, a few pieces of software are required.
 Database migrations will set up the database as it exists in its current state in the current version of the project.
 1. With the virtual environment active, navigate to '/vagrant/src/scrum_scrum/' if not already in that directory.
 2. Run `python manage.py makemigrations`
-3. If changes are made, execute `python manage.py migrate`
+3. Regardless of whether or not changes are made, it is always a good idea to execute `python manage.py migrate` after making the migrations.
 
 ## Starting the development server
 To test the API, you will need to tell Django to start listening for network requests.
