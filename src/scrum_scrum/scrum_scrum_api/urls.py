@@ -1,0 +1,14 @@
+from django.conf.urls import url
+from django.conf.urls import include
+from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views as auth_views
+
+from . import views
+
+router = DefaultRouter()
+router.register('user', views.ScrumScrumUserViewSet)
+router.register('login', views.LoginViewSet, base_name='login')
+
+urlpatterns = [
+    url(r'', include(router.urls)),
+]
