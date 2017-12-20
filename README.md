@@ -42,7 +42,7 @@ To test the API, you will need to tell Django to start listening for network req
 2. You can now use the API.
 
 ## API Routes
-The following API routes are currently implemented, and you can access them on the development server by replacing *{domain}* with *127.0.0.1:8080* or *localhost:8080* in a web browser.
+The following API routes are currently implemented, and you can access them on the development server by replacing **_{domain}_** with **_127.0.0.1:8080_** or **_localhost:8080_** in a web browser.
 ### login *{domain}/api/login/*
 This route returns an auth token via JSON if the supplied credentials are legitimate, or a 400 BAD REQUEST HTTP error if the credentials are invalid. You will need to include an Authorization header in every following HTTP request that requires a user to be "logged in".
 - JSON: `{ "token" : "<the auth token>" }`
