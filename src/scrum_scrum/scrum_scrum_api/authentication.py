@@ -1,77 +1,95 @@
-import jwt
+import datetime
+import logging
 
 from django.conf import settings
 from rest_framework import exceptions
-from rest_framework import authentication
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import get_authorization_header
+from django.utils import timezone
 
-from .models import ScrumScrumUser
+from .models import ScrumScrumUserToken
 
-class JWTAuthentication(authentication.BaseAuthentication):
-    """Authenticate with a JWT that has an expiration."""
+logger = logging.getLogger('django')
 
-    authentication_header_prefix = 'Token'
+def get_client(request):
+    """Extract the client type from the HTTP header.
+
+    Clients should include the following in the HTTP request header:
+        HTTP_CLIENT: <client_type>  <-- Could be either web or mobile
+
+    NOTE: it is acceptable to format the header like so:
+        client: <client_type>  <-- Could be either web or mobile
+
+        Django will automagically transform 'client' to 'HTTP_CLIENT'.
+    """
+
+    client = request.META.get('HTTP_CLIENT', b'')
+    if not isinstance(client, str):
+        raise ValueError('HTTP_CLIENT must be a string.')
+
+    if client not in ('web', 'mobile'):
+        raise ValueError('Unknown HTTP_CLIENT in Authorization Header.')
+
+    return client
+
+
+class ExpiringTokenAuthentication(TokenAuthentication):
+
+    model = ScrumScrumUserToken
 
     def authenticate(self, request):
+        """Override TokenAuthentication base implementation.
+
+        This overridden method will determine the type of client
+        ('web', 'mobile') that is trying to authenticate. This matters
+        because mobile apps' tokens will never expire, while web-based
+        tokens will expire.
         """
-        The `authenticate` method is called on every request regardless of
-        whether the endpoint requires authentication.
 
-        `authenticate` has two possible return values:
+        auth = get_authorization_header(request).split()
 
-        1) `None` - We return `None` if we do not wish to authenticate. Usually
-                    this means we know authentication will fail. An example of
-                    this is when the request does not include a token in the
-                    headers.
-
-        2) `(user, token)` - We return a user/token combination when
-                             authentication is successful.
-
-                            If neither case is met, that means there's an error
-                            and we do not return anything.
-                            We simple raise the `AuthenticationFailed`
-                            exception and let Django REST Framework
-                            handle the rest.
-        """
-        request.user = None
-
-        auth_header = authentication.get_authorization_header(request).split()
-        auth_header_prefix = self.authentication_header_prefix.lower()
-
-        if not auth_header:
+        if not auth or auth[0].lower() != self.keyword.lower().encode():
             return None
 
-        if len(auth_header) == 1:
-            # No credentials provided
-            return None
-        elif len(auth_header) > 2:
-            # Invalid token header
-            return None
-
-        prefix = auth_header[0].decode('utf-8')
-        token = auth_header[1].decode('utf-8')
-
-        if prefix.lower() != auth_header_prefix:
-            # Auth header prefix is not 'Token'
-            return None
-
-        return self._authenticate_credentials(request, token)
-
-    def _authenticate_credentials(self, request, token):
-        """Attempt to authenticate the given credentials."""
-
-        try:
-            payload = jwt.decode(token, settings.SECRET_KEY)
-        except Exception as e:
-            raise exceptions.AuthenticationFailed(str(e))
-
-        try:
-            user = ScrumScrumUser.objects.get(pk=payload['id'])
-        except User.DoesNotExist:
-            msg = 'No user matching this token was found.'
+        if len(auth) == 1:
+            msg = _('Invalid token header. No credentials provided.')
+            raise exceptions.AuthenticationFailed(msg)
+        elif len(auth) > 2:
+            msg = _('Invalid token header. '
+                    'Token string contains too many spaces.')
             raise exceptions.AuthenticationFailed(msg)
 
-        if not user.is_active:
-            msg = 'The requested user has been deactivated.'
+        try:
+            token = auth[1].decode()
+        except UnicodeError:
+            msg = _('Invalid token header. '
+                    'Token string should not contain invalid characters.')
             raise exceptions.AuthenticationFailed(msg)
 
-        return (user, token)
+        client = get_client(request)
+
+        return self.authenticate_credentials(token, client)
+
+    def authenticate_credentials(self, key, client):
+        """Actually authenticate the given credentials."""
+
+        try:
+            token = self.get_model().objects.get(key=key)
+        except self.get_model().DoesNotExist:
+            raise exceptions.AuthenticationFailed('Invalid token')
+        except self.get_model().MultipleObjectsReturned:
+            raise exceptions.AuthenticationFailed('Multiple matching tokens')
+
+        if not token.user.is_active:
+            raise exceptions.AuthenticationFailed(
+                'User is inactive or deleted their account.')
+
+        #   Check the timestamp on the token to see if it's expired.
+        #   Only do this if a web client is trying to authenticate.
+        if client == 'web':
+            utc_now = timezone.now()
+            expire = datetime.timedelta(days=settings.TOKEN_EXPIRATION_DAYS)
+            if token.created_on < utc_now - expire:
+                raise exceptions.AuthenticationFailed('Token has expired')
+
+        return token.user, token

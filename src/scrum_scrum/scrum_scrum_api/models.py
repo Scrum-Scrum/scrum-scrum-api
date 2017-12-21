@@ -2,13 +2,50 @@
 from __future__ import unicode_literals
 
 import datetime
-import jwt
+import binascii
+import os
+import logging
 
 from django.conf import settings
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
+
+logger = logging.getLogger('django')
+
+@python_2_unicode_compatible
+class ScrumScrumUserToken(models.Model):
+    """A custom Token class.
+
+    This implementation includes the client type for which the
+    token is created. The rest of the class is identical to Django REST
+    framework's Token, found at
+    https://github.com/encode/django-rest-framework/blob/master/rest_framework/authtoken/models.py
+    """
+
+    key = models.CharField(_("Key"), max_length=40,
+                           primary_key=True)
+    user = models.ForeignKey('ScrumScrumUser', on_delete=models.CASCADE)
+    created_on = models.DateTimeField(_("Created"), auto_now=True)
+    client = models.CharField(max_length=10)
+
+    class Meta:
+        verbose_name = _("Token")
+        verbose_name_plural = _("Tokens")
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = self.generate_key()
+        return super(ScrumScrumUserToken, self).save(*args, **kwargs)
+
+    def generate_key(self):
+        return binascii.hexlify(os.urandom(20)).decode()
+
+    def __str__(self):
+        return self.key
 
 class ScrumScrumUserManager(BaseUserManager):
     """Helps Django work with the custom user model."""
@@ -77,21 +114,3 @@ class ScrumScrumUser(AbstractBaseUser, PermissionsMixin):
 
     def __str___(self):
         return self.username
-
-    @property
-    def token(self):
-        """Return the user's token."""
-        return self._generate_jwt_token()
-
-    def _generate_jwt_token(self):
-        """Generate a JSON Web Token."""
-
-        expiration = datetime.datetime.now() + datetime.timedelta(
-                        days=settings.TOKEN_EXPIRATION_DAYS)
-
-        token = jwt.encode({
-            'id': self.pk,
-            'exp': int(expiration.strftime('%s'))
-        }, settings.SECRET_KEY, algorithm='HS256')
-
-        return token.decode('utf-8')
