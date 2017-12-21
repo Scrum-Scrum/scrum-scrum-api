@@ -23,17 +23,23 @@ In order to use this API, a few pieces of software are required.
      - You will see '(scrum_scrum)' at the beginning of the command-line prompt if this part is successful
        - If you already see '(scrum_scrum)' at the beginning of the command-line prompt, proceed to step 7 (you can still execute `workon scrum_scrum`, but nothing will happen).
      - **Make sure to always work within the virtual environment 'scrum_scrum' while interacting with the project.**
-   - *NOTE*: To deactivate the virtual environment, type `deactivate`
+   - *NOTE*: To deactivate the virtual environment, type `deactivate`. However, **you should not need to do this at any time.**
 7. With the 'scrum_scrum' environment active:
    - Navigate to '/vagrant/src/scrum_scrum'
      - Execute `./requirements.sh`
        - This will install the necessary python packages within the virtual environment 'scrum_scrum'
 
 ## Database Migrations
-Database migrations will set up the database as it exists in its current state in the current version of the project.
+Database migrations will set up the database as it exists in its current state in the current version of the project. This applies to table/database structure, but not data in the database.
 1. With the virtual environment active, navigate to '/vagrant/src/scrum_scrum/' if not already in that directory.
 2. Run `python manage.py makemigrations`
 3. Regardless of whether or not changes are made, it is always a good idea to execute `python manage.py migrate` after making the migrations.
+
+## Creating your first Scrum-Scrum user
+This step isn't *entirely* necessary, but you should do it so the first time you hit the user API endpoint you will actually get data back.
+1. Run `python manage.py createsuperuser`
+2. Follow the terminal prompts to enter the super user's information.
+   - *NOTE:* Be sure to remember the password you enter, as there is currently no endpoint to update or recover a password. An easy password to use would be 'ssuCSclub1', but you can use any password you want. The createsuperuser prompt will enforce password constraints.
 
 ## Starting the development server
 To test the API, you will need to tell Django to start listening for network requests.
@@ -42,12 +48,12 @@ To test the API, you will need to tell Django to start listening for network req
 2. You can now use the API.
 
 ## API Routes
-The following API routes are currently implemented, and you can access them on the development server by replacing **_{domain}_** with **_127.0.0.1:8080_** or **_localhost:8080_** in a web browser.
+The following API routes are currently implemented, and you can access them on the development server by replacing **_{domain}_** with **_127.0.0.1:8080_** or **_localhost:8080_** in a web browser. You don't have to access the API from a browser though; you can always interact with the API as you normally would within the client-side code by making normal API calls. In this case, your base API URL would be **_http://127.0.0.1:8080/api/_**.
 ### login *{domain}/api/login/*
-This route returns an auth token via JSON if the supplied credentials are legitimate, or a 400 BAD REQUEST HTTP error if the credentials are invalid. You will need to include an Authorization header in every following HTTP request that requires a user to be "logged in". Additionally, you will need to include the client type in the HTTP request header to tell the server
+This route returns an auth token via JSON if the supplied credentials are legitimate, or a 401 Unauthorized HTTP error if the credentials are invalid. You will need to include an Authorization header in every following HTTP request that requires a user to be "logged in". Additionally, you will need to include the client type in the HTTP request header to tell the server
 which type of token you need (expiring or non-expiring). Mobile clients
 receive non-expiring tokens and web clients receive expiring tokens. You should include the client header in **_every_** request, regardless of
-current authenticated state or API route you are accessing.
+current authenticated state or API route you are accessing. Users may authenticate with their username or email address.
 - JSON: `{ "token" : "<the auth token>" }`
 - Acceptable HTTP request methods:
   - POST
@@ -55,6 +61,7 @@ current authenticated state or API route you are accessing.
   - *The format of the authorization header must match the above exactly*
 - Client header: `client: <client_type>`
   - `<client_type>` may be *web* or *mobile*
+
 ### user *{domain}/api/user/*
 This route allows for creation of new users or listing of all users, depending on the HTTP request method used.
 - Acceptable HTTP request methods:
