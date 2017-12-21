@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',
     'scrum_scrum_api',
 ]
 
@@ -109,11 +108,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#   Override Django's base user model for authentication
 AUTH_USER_MODEL = 'scrum_scrum_api.ScrumScrumUser'
 
+#   REST_FRAMEWORK settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'scrum_scrum_api.authentication.JWTAuthentication',
+        'scrum_scrum_api.authentication.ExpiringTokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'scrum_scrum_api.permissions.UpdateOwnUser',
@@ -140,6 +141,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+#   Django logging configuration
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -157,4 +159,4 @@ LOGGING = {
 }
 
 # Lifespan of authentication token
-TOKEN_EXPIRATION_HRS = 24
+TOKEN_EXPIRATION_DAYS = 14
