@@ -111,6 +111,11 @@ AUTH_PASSWORD_VALIDATORS = [
 #   Override Django's base user model for authentication
 AUTH_USER_MODEL = 'scrum_scrum_api.ScrumScrumUser'
 
+#   Override Django's default authentication backend
+AUTHENTICATION_BACKENDS = (
+    'scrum_scrum_api.backends.ScrumScrumAuthBackend',
+)
+
 #   REST_FRAMEWORK settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
