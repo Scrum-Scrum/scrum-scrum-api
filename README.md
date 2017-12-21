@@ -44,12 +44,17 @@ To test the API, you will need to tell Django to start listening for network req
 ## API Routes
 The following API routes are currently implemented, and you can access them on the development server by replacing **_{domain}_** with **_127.0.0.1:8080_** or **_localhost:8080_** in a web browser.
 ### login *{domain}/api/login/*
-This route returns an auth token via JSON if the supplied credentials are legitimate, or a 400 BAD REQUEST HTTP error if the credentials are invalid. You will need to include an Authorization header in every following HTTP request that requires a user to be "logged in".
+This route returns an auth token via JSON if the supplied credentials are legitimate, or a 400 BAD REQUEST HTTP error if the credentials are invalid. You will need to include an Authorization header in every following HTTP request that requires a user to be "logged in". Additionally, you will need to include the client type in the HTTP request header to tell the server
+which type of token you need (expiring or non-expiring). Mobile clients
+receive non-expiring tokens and web clients receive expiring tokens. You should include the client header in **_every_** request, regardless of
+current authenticated state or API route you are accessing.
 - JSON: `{ "token" : "<the auth token>" }`
 - Acceptable HTTP request methods:
   - POST
 - Authorization header: `Authorization: Token <the auth token>`
   - *The format of the authorization header must match the above exactly*
+- Client header: `client: <client_type>`
+  - `<client_type>` may be *web* or *mobile*
 ### user *{domain}/api/user/*
 This route allows for creation of new users or listing of all users, depending on the HTTP request method used.
 - Acceptable HTTP request methods:
