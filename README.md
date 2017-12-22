@@ -92,5 +92,7 @@ This route is essentially a detail view for a specific user corresponding to the
 This route is where users will go to reset their forgotten password.
 
 You'll find in *settings.py* 
+
 `EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'`
+
 which will print the 'email' to the console.
