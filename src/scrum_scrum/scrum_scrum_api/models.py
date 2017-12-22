@@ -8,6 +8,7 @@ import logging
 
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser
@@ -94,7 +95,10 @@ class ScrumScrumUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     date_joined = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True)
+
+    #   is_active will default to False, because users will need to
+    #   verify their email address.
+    is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
     objects = ScrumScrumUserManager()
@@ -114,3 +118,27 @@ class ScrumScrumUser(AbstractBaseUser, PermissionsMixin):
 
     def __str___(self):
         return self.username
+
+class ActivationKey(models.Model):
+    """This model will represent an activation key.
+
+    Users need to verify their email with the correct activation key.
+    """
+
+    lifespan = datetime.timedelta(
+                seconds=settings.ACTIVATION_KEY_EXPIRATION_DAYS)
+
+    key = models.CharField(
+            max_length=settings.ACTIVATION_KEY_LENGTH)
+    user = models.ForeignKey(ScrumScrumUser, related_name='scrum_scrum_user',
+                             on_delete=models.CASCADE)
+    expires = models.DateTimeField()
+
+    class Meta:
+        unique_together = (('key', 'user'),)
+
+class ArchivedActivationKey(models.Model):
+    """This model will represent an activation key that has expired."""
+
+    key = models.CharField(
+            max_length=settings.ACTIVATION_KEY_LENGTH, unique=True)

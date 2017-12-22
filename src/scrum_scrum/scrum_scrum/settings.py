@@ -56,7 +56,9 @@ ROOT_URLCONF = 'scrum_scrum.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            'scrum_scrum_api/templates'
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,6 +117,15 @@ AUTH_USER_MODEL = 'scrum_scrum_api.ScrumScrumUser'
 AUTHENTICATION_BACKENDS = (
     'scrum_scrum_api.backends.ScrumScrumAuthBackend',
 )
+
+#   Activation key length (must be <= 255)
+ACTIVATION_KEY_LENGTH = 40
+
+#   The number of days an activation key will remain active
+ACTIVATION_KEY_EXPIRATION_DAYS = 7
+
+#   Email address from which Django will "send" emails
+DEFAULT_FROM_EMAIL = 'webmaster@localhost.com'
 
 #   REST_FRAMEWORK settings
 REST_FRAMEWORK = {
