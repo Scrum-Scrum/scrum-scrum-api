@@ -4,9 +4,12 @@ from __future__ import unicode_literals
 import logging
 
 from rest_framework import viewsets
+from rest_framework import mixins
+from rest_framework import serializers as rf_serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.conf import settings
@@ -132,6 +135,28 @@ class LoginViewSet(viewsets.ViewSet):
         """Use the ObtainAuthToken APIView to validate and create a token."""
 
         return ObtainExpiringAuthToken().post(request)
+
+class LogoutViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
+    """Logs a user out and revokes their client's token.
+
+    More specifically, this viewset will revoke (delete) the token specific to
+    the type of client that issued the logout request. For instance, if
+    a user is logged in on both mobile and web, the user may log out of either
+    without affecting the authenticated state of the other.
+    """
+
+    serializer_class = serializers.LogoutSerializer
+    permission_classes = (IsAuthenticated,)
+
+    #   Only allowing POST requests
+    def create(self, request):
+        user = models.ScrumScrumUser.objects.get(username=request.user)
+        client = get_client(request)
+        authtoken = models.ScrumScrumUserToken.objects.get(
+                        user_id=user.id, client=client)
+        authtoken.delete()
+        return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
+
 
 class ScrumScrumUserViewSet(viewsets.ModelViewSet):
     """Handles creating, reading, and updating scrum scrum users."""

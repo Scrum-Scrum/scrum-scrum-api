@@ -40,3 +40,6 @@ class ScrumScrumUpdateUserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'is_active': {'read_only': True},
         }
+
+class LogoutSerializer(serializers.Serializer):
+    pass
