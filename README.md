@@ -87,3 +87,7 @@ This route is essentially a detail view for a specific user corresponding to the
   - PUT: Update the user's information (must be authenticated as specified user)
   - PATCH: Update the user's information (must be authenticated as specified user)
   - DELETE: Delete the user's account (must be authenticated as specified user)
+
+### password recovery *{domain}/reset/*
+This route is where users will go to reset their forgotten password.
+You'll find in *settings.py* `EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'`, which will print the 'email' to the console.
