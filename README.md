@@ -80,7 +80,7 @@ In the case of either HTTP method listed above, each will return a formatted JSO
   &nbsp;&nbsp;"is_active": true **_(could also be false)_**  
   }  
 
-When you create a new user, an email template will be printed to the console. This template will include a hyperlink that must be used to activate the new account. All you need to do is copy the full link from the terminal (where the server is listening for network requests) and paste it into a new window. If the link was copy/pasted correctly, the API should return a 200 OK status code with a message about activating the account. If, for some reason, the link was corrupted or not copied properly, the API will return a 400 BAD REQUEST error code with a more detailed error message.
+When you create a new user, an email template will be printed to the console. This template will include a hyperlink that must be used to activate the new account. All you need to do is copy the full link from the terminal (where the server is listening for network requests) and paste it into a new window. If the link was copy/pasted correctly, the API should return a 200 OK status code with a message about activating the account. If, for some reason, the link was corrupted or not copied properly, the API will return a 400 BAD REQUEST error code with a more detailed error message. These activation links are currently set to expire after 7 days.
 
 **_NOTE:_** You *must* activate the new account before attempting to authenticate. It won't break anything if you don't, but you won't be able to pass auth.
 
