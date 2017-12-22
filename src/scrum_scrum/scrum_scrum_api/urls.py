@@ -10,5 +10,7 @@ router.register('user', views.ScrumScrumUserViewSet)
 router.register('login', views.LoginViewSet, base_name='login')
 
 urlpatterns = [
+    url(r'^activate/(?P<user_id>[a-zA-Z0-9]*)/(?P<activation_key>[a-zA-Z0-9]*)',
+        views.activate),
     url(r'', include(router.urls)),
 ]
