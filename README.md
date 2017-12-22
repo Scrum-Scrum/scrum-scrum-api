@@ -80,6 +80,10 @@ In the case of either HTTP method listed above, each will return a formatted JSO
   &nbsp;&nbsp;"is_active": true **_(could also be false)_**  
   }  
 
+When you create a new user, an email template will be printed to the console. This template will include a hyperlink that must be used to activate the new account. All you need to do is copy the full link from the terminal (where the server is listening for network requests) and paste it into a new window. If the link was copy/pasted correctly, the API should return a 200 OK status code with a message about activating the account. If, for some reason, the link was corrupted or not copied properly, the API will return a 400 BAD REQUEST error code with a more detailed error message.
+
+**_NOTE:_** You *must* activate the new account before attempting to authenticate. It won't break anything if you don't, but you won't be able to pass auth.
+
 ### specific user *{domain}/api/user/{user_id}*
 This route is essentially a detail view for a specific user corresponding to their *{user_id}* in the database.
 - Acceptable HTTP request methods:
@@ -91,7 +95,7 @@ This route is essentially a detail view for a specific user corresponding to the
 ### password recovery *{domain}/reset/* [Found Here](https://simpleisbetterthancomplex.com/tutorial/2016/09/19/how-to-create-password-reset-view.html)
 This route is where users will go to reset their forgotten password.
 
-You'll find in *settings.py* 
+You'll find in *settings.py*
 
 `EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'`
 
