@@ -165,3 +165,6 @@ LOGGING = {
 
 # Lifespan of authentication token
 TOKEN_EXPIRATION_DAYS = 14
+
+# Development email tesing
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
