@@ -62,6 +62,11 @@ current authenticated state or API route you are accessing. Users may authentica
 - Client header: `client: <client_type>`
   - `<client_type>` may be *web* or *mobile*
 
+### logout *{domain}/api/logout/*
+This route revokes (deletes) the auth token that belongs to the client that initiated the logout request. This endpoint is only accessible to users who are logged in using a valid auth token. If a non-authenticated client hits this endpoint, a 401 UNAUTHORIZED error code is returned. If the request is legit, a 200 OK status is returned and the corresponding token is deleted.
+- Acceptable HTTP request methods:
+  - POST
+
 ### user *{domain}/api/user/*
 This route allows for creation of new users or listing of all users, depending on the HTTP request method used.
 - Acceptable HTTP request methods:
