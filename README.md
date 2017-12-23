@@ -99,10 +99,11 @@ This route is essentially a detail view for a specific user corresponding to the
 
 ### update password *{domain}/api/update-password/*
 This route is provided so that authenticated users may change their password.  
+
 **_NOTE_**: This should probably revoke authentication tokens for all clients, but that is currently not implemented.
 - Acceptable HTTP request methods:
   - PATCH
-- JSON to provide to the API:
+- JSON to provide to the API:  
 &nbsp;&nbsp;{  
 &nbsp;&nbsp;&nbsp;&nbsp;"current_password": "the current password",  
 &nbsp;&nbsp;&nbsp;&nbsp;"new_password": "the new password"  
