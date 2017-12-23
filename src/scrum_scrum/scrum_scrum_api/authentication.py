@@ -32,6 +32,17 @@ def get_client(request):
 
     return client
 
+def update_password(user, serialized_data):
+    """Update a user's password if they provide the correct current password."""
+
+    current_password = serialized_data.get('current_password')
+    new_password = serialized_data.get('new_password')
+    if not user.check_password(current_password):
+        raise exceptions.AuthenticationFailed("Current password is incorrect")
+
+    user.set_password(new_password)
+    user.save()
+
 
 class ExpiringTokenAuthentication(TokenAuthentication):
 
