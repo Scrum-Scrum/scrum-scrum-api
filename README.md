@@ -106,7 +106,7 @@ This route is provided so that authenticated users may change their password.
 &nbsp;&nbsp;{  
 &nbsp;&nbsp;&nbsp;&nbsp;"current_password": "the current password",  
 &nbsp;&nbsp;&nbsp;&nbsp;"new_password": "the new password"  
-&nbsp;&nbsp;}  
+&nbsp;&nbsp;}
 It is not necessary to provide any user information in the request, as long as the correct authentication token is provided in the HTTP Authorization header, described above. The API will retrieve the user corresponding to the token provided and change that particular user's password. A successful password change will return a 200 OK status code, while an unsuccessful password change (such as when an incorrect current password is provided) will return a 401 Unauthorized error code (and not change the password, of course).
 
 ### password recovery *{domain}/reset/* [Found Here](https://simpleisbetterthancomplex.com/tutorial/2016/09/19/how-to-create-password-reset-view.html)
