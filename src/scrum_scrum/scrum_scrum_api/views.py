@@ -5,10 +5,12 @@ import logging
 
 from rest_framework import viewsets
 from rest_framework import mixins
+from rest_framework import exceptions
+from rest_framework import status
 from rest_framework import serializers as rf_serializers
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -22,7 +24,7 @@ from . import permissions
 from . import models
 from . import activation
 from .authentication import ExpiringTokenAuthentication
-from .authentication import get_client
+from .authentication import get_client, update_password
 
 logger = logging.getLogger('django')
 
@@ -156,6 +158,32 @@ class LogoutViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
                         user_id=user.id, client=client)
         authtoken.delete()
         return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
+
+class UpdatePasswordView(APIView):
+    """Provides an endpoint for a user to update their password."""
+
+    queryset = models.ScrumScrumUser.objects.all()
+    permission_classes = (permissions.UpdateOwnUser, IsAuthenticated,)
+    authentication_classes = (ExpiringTokenAuthentication,)
+
+    def patch(self, request):
+        serializer = serializers.ScrumScrumUpdatePasswordSerializer(
+                        data=request.data)
+        if serializer.is_valid():
+            try:
+                update_password(request.user, serializer.data)
+            except exceptions.AuthenticationFailed as e:
+                return Response({
+                    "error": str(e)
+                }, status=status.HTTP_401_UNAUTHORIZED)
+
+            return Response({
+                "message": "Password updated."
+            }, status=status.HTTP_200_OK)
+
+        return Response({
+            "error": "Invalid data"
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ScrumScrumUserViewSet(viewsets.ModelViewSet):

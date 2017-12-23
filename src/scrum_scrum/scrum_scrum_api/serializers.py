@@ -1,6 +1,10 @@
 from rest_framework import serializers
 
+import logging
+
 from . import models
+
+logger = logging.getLogger('django')
 
 class ScrumScrumNewUserSerializer(serializers.ModelSerializer):
     """A serializer for a new ScrumScrumUser object."""
@@ -40,6 +44,13 @@ class ScrumScrumUpdateUserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'is_active': {'read_only': True},
         }
+
+class ScrumScrumUpdatePasswordSerializer(serializers.Serializer):
+
+    current_password = serializers.CharField(style={'input_type': 'password'},
+                                             required=True)
+    new_password = serializers.CharField(style={'input_type': 'password'},
+                                         required=True)
 
 class LogoutSerializer(serializers.Serializer):
     pass
