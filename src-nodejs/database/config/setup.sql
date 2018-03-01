@@ -1,3 +1,4 @@
+CREATE DATABASE IF NOT EXISTS scrum_scrum;
 USE scrum_scrum;
 
 CREATE TABLE user (
