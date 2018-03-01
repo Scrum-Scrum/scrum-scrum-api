@@ -19,32 +19,24 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     # Set language
     sudo localectl set-locale LANG=en_US.UTF-8
-    # Install Python
-    sudo dnf install -y python-devel python-pip
-    # Update pip
-    sudo pip install --upgrade pip
+
+    # Install npm and nodejs
+    sudo dnf install -y npm
+
     # Install MariaDB
     sudo dnf -y install mysql-server mysql
+
     if ! grep -q MYSQL_PATH_ALREADY_ADDED /home/vagrant/.bashrc; then
       echo "# MYSQL_PATH_ALREADY_ADDED" >> /home/vagrant/.bashrc
       echo "export PATH=$PATH:/usr/local/mysql/bin" >> /home/vagrant/.bashrc
     fi
+
     sudo dnf -y install mysql-devel
-    # sudo dnf install MySQL-python
-    # sudo pip install mysqlclient
+
     # Start MariaDB
     sudo systemctl start mariadb
     sudo systemctl enable mariadb
-    # Install virtualenvwrapper
-    sudo pip install virtualenvwrapper
-    # Set up virtualenv 'scrum_scrum'
-    if ! grep -q VIRTUALENV_ALREADY_ADDED /home/vagrant/.bashrc; then
-      echo "# VIRTUALENV_ALREADY_ADDED" >> /home/vagrant/.bashrc
-      echo "WORKON_HOME=~/.virtualenvs" >> /home/vagrant/.bashrc
-      echo "PROJECT_HOME=/vagrant" >> /home/vagrant/.bashrc
-      echo "source /usr/bin/virtualenvwrapper.sh" >> /home/vagrant/.bashrc
-      echo "mkvirtualenv scrum_scrum" >> /home/vagrant/.bashrc
-    fi
+
     # Make sure the database is set up
     if ! grep -q MYSQL_PERMISSIONS_ALREADY_SET /home/vagrant/.bashrc; then
       echo "# MYSQL_PERMISSIONS_ALREADY_SET" >> /home/vagrant/.bashrc
