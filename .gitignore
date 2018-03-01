@@ -22,3 +22,6 @@ ENV/
 
 # Ignore commit_msg.txt file (for keeping track of changes before committing)
 commit_msg.txt
+
+# nodejs
+node_modules/

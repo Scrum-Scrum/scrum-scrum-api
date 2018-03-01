@@ -1,0 +1,32 @@
+{
+  "name": "scrum-scrum-api",
+  "version": "1.0.0",
+  "description": "Backend API for the SSU CS Scrum Scrum Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinit": "npm run teardown; npm run setup",
+    "start": "nodemon src-nodejs/index.js",
+    "init": "nodemon src-nodejs/index.js",
+    "setup": "mysql -uroot < src-nodejs/database/config/setup.sql",
+    "teardown": "mysql -uroot < src-nodejs/database/config/teardown.sql"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Scrum-Scrum/scrum-scrum-api.git"
+  },
+  "author": "Chad Lewis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Scrum-Scrum/scrum-scrum-api/issues"
+  },
+  "homepage": "https://github.com/Scrum-Scrum/scrum-scrum-api#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "morgan": "^1.9.0",
+    "mysql": "^2.15.0",
+    "nodemon": "^1.17.1"
+  }
+}
