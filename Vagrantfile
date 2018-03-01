@@ -20,17 +20,17 @@ Vagrant.configure("2") do |config|
     # Set language
     sudo localectl set-locale LANG=en_US.UTF-8
     # Install Python
-    sudo yum install -y python-devel python-pip
+    sudo dnf install -y python-devel python-pip
     # Update pip
     sudo pip install --upgrade pip
     # Install MariaDB
-    sudo yum -y install mysql-server mysql
+    sudo dnf -y install mysql-server mysql
     if ! grep -q MYSQL_PATH_ALREADY_ADDED /home/vagrant/.bashrc; then
       echo "# MYSQL_PATH_ALREADY_ADDED" >> /home/vagrant/.bashrc
       echo "export PATH=$PATH:/usr/local/mysql/bin" >> /home/vagrant/.bashrc
     fi
-    sudo yum -y install mysql-devel
-    # sudo yum install MySQL-python
+    sudo dnf -y install mysql-devel
+    # sudo dnf install MySQL-python
     # sudo pip install mysqlclient
     # Start MariaDB
     sudo systemctl start mariadb
