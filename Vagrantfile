@@ -20,8 +20,12 @@ Vagrant.configure("2") do |config|
     # Set language
     sudo localectl set-locale LANG=en_US.UTF-8
 
+    # Install wget
+    sudo dnf install -y wget
+
     # Install npm and nodejs
-    sudo dnf install -y npm
+    sudo wget https://nodejs.org/download/release/v9.0.0/node-v9.0.0-linux-x64.tar.xz
+    tar -xf node-v9.0.0-linux-x64.tar.xz --directory /home/vagrant --strip-components 1
 
     # Install MariaDB
     sudo dnf -y install mysql-server mysql
