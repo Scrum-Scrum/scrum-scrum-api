@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "preinit": "npm run teardown; npm run setup",
+    "prefirst": "npm run teardown; npm run setup",
     "start": "nodemon src-nodejs/index.js",
-    "init": "nodemon src-nodejs/index.js",
+    "first": "nodemon src-nodejs/index.js",
     "setup": "mysql -uroot < src-nodejs/database/config/setup.sql",
     "teardown": "mysql -uroot < src-nodejs/database/config/teardown.sql"
   },
