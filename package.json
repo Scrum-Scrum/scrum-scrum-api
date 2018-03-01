@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prefirst": "npm run teardown; npm run setup",
-    "start": "nodemon src-nodejs/index.js",
-    "first": "nodemon src-nodejs/index.js",
+    "start": "nodemon src-nodejs/server/server.js",
+    "first": "nodemon src-nodejs/server/server.js",
     "setup": "mysql -uroot < src-nodejs/database/config/setup.sql",
     "teardown": "mysql -uroot < src-nodejs/database/config/teardown.sql"
   },
