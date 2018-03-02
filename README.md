@@ -7,6 +7,17 @@ This branch has been created in an attempt to create the Scrum Scrum API with
 a little too heavy and the learning curve is _way_ too steep. As such, this is
 an experimental work in progress and implementation is likely to be very fluid.
 
+## Table of Contents
+- [Prerequisites](https://github.com/Scrum-Scrum/scrum-scrum-api/tree/scrum-scrum-api-nodejs#prerequisites)
+- [Getting Started](https://github.com/Scrum-Scrum/scrum-scrum-api/tree/scrum-scrum-api-nodejs#getting-started)
+- [Starting the Development Server](https://github.com/Scrum-Scrum/scrum-scrum-api/tree/scrum-scrum-api-nodejs#starting-the-development-server)
+- [The API](https://github.com/Scrum-Scrum/scrum-scrum-api/tree/scrum-scrum-api-nodejs#the-api)
+  - [Hitting Endpoints - Basic Overview](https://github.com/Scrum-Scrum/scrum-scrum-api/tree/scrum-scrum-api-nodejs#hitting-endpoints---basic-overview)
+  - [API Routes](https://github.com/Scrum-Scrum/scrum-scrum-api/tree/scrum-scrum-api-nodejs#api-routes)
+    - [user](https://github.com/Scrum-Scrum/scrum-scrum-api/tree/scrum-scrum-api-nodejs#user-user)
+  - [Error Responses](https://github.com/Scrum-Scrum/scrum-scrum-api/tree/scrum-scrum-api-nodejs#error-responses)
+
+
 ## Prerequisites
 In order to use this API during development, a few pieces of software are required.
 - [VirtualBox](https://www.virtualbox.org/)
@@ -111,8 +122,9 @@ Follow these steps to set this up:
       - Run `vagrant reload` from `scrum-scrum-api/`
       - Follow the steps in the `Starting the Development Server` section
 6. If you have never started the VM (skip if you did step 5!):
-   - Begin at Step 3 in the `Getting Started` section and proceed through the
-   `Starting the Development Server` section
+   - Begin at [Step 3 in the `Getting Started` section](https://github.com/Scrum-Scrum/scrum-scrum-api/tree/scrum-scrum-api-nodejs#getting-started)
+   and proceed through the
+   [`Starting the Development Server` section](https://github.com/Scrum-Scrum/scrum-scrum-api/tree/scrum-scrum-api-nodejs#starting-the-development-server)
 
 **Example**
 
