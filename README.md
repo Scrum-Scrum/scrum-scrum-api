@@ -166,3 +166,20 @@ but only the following are required and _acceptabe_ to create a user:
 The other fields will be inserted automatically by the database. Attempting to
 insert into or modify automatically-inserted fields will return a
 `403 FORBIDDEN` error from the API.
+
+---
+
+## Error Responses
+
+Ill-formed requests or server/API problems may cause an error to be returned to
+the client hitting the API. The error format is pretty basic:
+```json
+{
+    "error": {
+        "message": "Some error message or object specific to the problem"
+    }
+}
+```
+Additionally, a [W3 HTTP Protocol Status Code](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
+will be returned with every response regardless of whether or not an error
+occurred.
