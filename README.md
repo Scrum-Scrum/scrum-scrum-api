@@ -153,21 +153,28 @@ This route allows for creation of new users or listing of all users, depending o
   - `POST`: create new user
   - `GET`: list all users
 
-In the case of either HTTP method listed above, each will return a formatted JSON (a JSON array for GET, and a single JSON object for POST) response if it was a good request. Each individual user object will have the same structure as the
-following:
+In the case of either HTTP method listed above, each will return a formatted JSON response if it
+was a good request.
+
+**`GET` Request Response**:
 
 ```json
-{  
-  "id": 1,  
-  "email": "example@scrumscrum.com",
-  "username": "scrummy",
-  "first_name": "Scrum",
-  "last_name": "Scrummy",
-  "date_joined": "2017-12-20T06:59:24.528864Z",
-  "is_active": true
+{
+    "user": [
+        {
+            "id": 1,  
+            "email": "example@scrumscrum.com",
+            "username": "scrummy",
+            "first_name": "Scrum",
+            "last_name": "Scrummy",
+            "date_joined": "2017-12-20T06:59:24.528864Z",
+            "is_active": true
+        }
+    ]
 }
 ```
-When creating a new user, it is important to note that both `username` and
+
+When creating a new user with a `POST` request, it is important to note that both `username` and
 `email` fields are _unique_ fields in the database. All fields are `NOT NULL`,
 but only the following are required and _acceptabe_ to create a user:
 - email
@@ -178,6 +185,21 @@ but only the following are required and _acceptabe_ to create a user:
 The other fields will be inserted automatically by the database. Attempting to
 insert into or modify automatically-inserted fields will return a
 `403 FORBIDDEN` error from the API.
+
+**`POST` Request Response**:
+```json
+{
+    "created": {
+        "id": 1,  
+        "email": "example@scrumscrum.com",
+        "username": "scrummy",
+        "first_name": "Scrum",
+        "last_name": "Scrummy",
+        "date_joined": "2017-12-20T06:59:24.528864Z",
+        "is_active": true
+    }
+}
+```
 
 ---
 
