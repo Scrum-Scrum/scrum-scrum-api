@@ -182,22 +182,24 @@ but only the following are required and _acceptabe_ to create a user:
 - first_name
 - last_name
 
-The other fields will be inserted automatically by the database. Attempting to
-insert into or modify automatically-inserted fields will return a
-`403 FORBIDDEN` error from the API.
+If the required fields above are not supplied, _AND/OR_ `id`, `date_joined`,
+or `is_active` _ARE_ supplied, the API will return a `404 BAD REQUEST` error
+response.
 
 **`POST` Request Response**:
 ```json
 {
-    "created": {
-        "id": 1,  
-        "email": "example@scrumscrum.com",
-        "username": "scrummy",
-        "first_name": "Scrum",
-        "last_name": "Scrummy",
-        "date_joined": "2017-12-20T06:59:24.528864Z",
-        "is_active": true
-    }
+    "created": [
+        {
+            "id": 1,  
+            "email": "example@scrumscrum.com",
+            "username": "scrummy",
+            "first_name": "Scrum",
+            "last_name": "Scrummy",
+            "date_joined": "2017-12-20T06:59:24.528864Z",
+            "is_active": true
+        }
+    ]
 }
 ```
 

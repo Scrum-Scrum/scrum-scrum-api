@@ -50,7 +50,7 @@ router.post('/', (req, res) => {
     userDatabase.createUser(user)
         .then((user) => {
             res.status(200).json({
-                message: user
+                created: user
             });
         })
         .catch((error) => {
