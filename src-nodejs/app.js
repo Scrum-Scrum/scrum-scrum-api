@@ -3,6 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const userRoutes = require('./api/routes/user/users');
+const authRoutes = require('./api/routes/auth/auth');
 
 
 app.use(morgan('dev'));
@@ -24,8 +25,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/user', userRoutes);
-// app.use('/api/login', loginRoutes);
-// app.use('/api/logout', logoutRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');

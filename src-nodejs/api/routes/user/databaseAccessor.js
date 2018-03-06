@@ -1,22 +1,7 @@
 const mysql = require('mysql');
-const connectionPool = require('../../../database');
-
-const serverError = new Error(
-    'An error occurred talking to the database'
-);
-serverError.status = 500;
-
-const getConnection = () => {
-    return new Promise((resolve, reject) => {
-        connectionPool.getConnection((err, connection) => {
-            if (err) {
-                console.log('connection error', err);
-                reject(serverError);
-            }
-            resolve(connection);
-        });
-    });
-};
+const getConnection = require('../../../database/connection');
+const userUtils = require('./utils');
+const errors = require('../../../errors');
 
 const queryDatabase = (sqlQuery) => {
     return getConnection()
@@ -31,27 +16,13 @@ const queryDatabase = (sqlQuery) => {
                         Object.keys(error).forEach((key) => {
                             console.log(`error[${key}]:`, error[key]);
                         })
-                        reject(serverError);
+                        reject(errors.serverError);
                     }
                     resolve(results);
                 });
             });
         });
 }
-
-const isValidUser = (user) => {
-    const {
-        id,
-        email,
-        username,
-        first_name,
-        last_name,
-        date_joined,
-        is_active
-    } = user;
-
-    return (email && username && first_name && last_name) && !(id || date_joined || is_active);
-};
 
 const userDatabase = {
     getAllUsers: () => {
@@ -65,7 +36,7 @@ const userDatabase = {
 
     createUser: (user) => {
         console.log('this', this);
-        if (!isValidUser(user)) {
+        if (!userUtils.isValidUser(user)) {
             const error = new Error('Attempted to write read-only values');
             error.status = 404;
             throw error;
@@ -98,6 +69,7 @@ const userDatabase = {
                     throw error;
                 } else {
                     console.log('creating user');
+                    user = userUtils.transformUser(user);
                     const createUserQuery = mysql.format(
                         'INSERT INTO user SET ?',
                         user
@@ -111,6 +83,9 @@ const userDatabase = {
                     results.insertId
                 );
                 return queryDatabase(getUserQuery);
+            })
+            .catch((err) => {
+                console.log(err);
             });
     }
 };

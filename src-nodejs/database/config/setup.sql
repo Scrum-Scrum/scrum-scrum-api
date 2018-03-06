@@ -8,5 +8,6 @@ CREATE TABLE user (
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     date_joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    is_active BOOLEAN NOT NULL DEFAULT 0
+    is_active BOOLEAN NOT NULL DEFAULT 0,
+    hash VARCHAR(60) NOT NULL
 );
