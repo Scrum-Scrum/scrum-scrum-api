@@ -84,7 +84,10 @@ const userDatabase = {
                     throw error;
                 } else {
                     console.log('creating email query');
-                    const emailQuery = mysql.format('SELECT * FROM user WHERE email = ?', user.email);
+                    const emailQuery = mysql.format(
+                        'SELECT * FROM user WHERE email = ?',
+                        user.email
+                    );
                     return queryDatabase(emailQuery);
                 }
             })
