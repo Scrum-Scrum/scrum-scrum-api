@@ -1,9 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const userDatabase = require('./databaseAccessor');
+const { verifyToken } = require('../auth/token');
 
 // List all users
 router.get('/', (req, res, next) => {
+    // verifyToken(req)
+    //     .then(data => {
+    //         console.log('token verified with data', data);
+    //         res.json({ data });
+    //     })
+    //     .catch(err => {
+    //         res.status(err.status).json({ message: err.message });
+    //     });
     userDatabase.getAllUsers()
         .then((users) => {
             res.status(200).json({
